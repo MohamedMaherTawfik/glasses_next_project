@@ -1,0 +1,6 @@
+import { ArrowRight, Camera } from "lucide-react";
+import Link from "next/link";
+
+export function Footer() {
+  return <footer className="footer" id="contact"><div className="footer-main"><div><span className="wordmark">VISIONA</span><p className="footer-description">Premium eyewear for a life seen clearly. Designed in New York, worn everywhere.</p></div><div><h4>Quick Links</h4><nav className="footer-links"><Link href="/">Home</Link><Link href="/products">Collection</Link><Link href="/#story">About</Link><Link href="/#contact">Contact</Link></nav></div><div><h4>Follow Us</h4><div className="socials"><a href="#" aria-label="Instagram"><Camera size={12} /></a><a href="#" aria-label="Facebook">f</a><a href="#" aria-label="Youtube">▶</a></div></div><div><h4>Join Our Newsletter</h4><p className="footer-description" style={{ marginBottom: 13 }}>Get the latest updates and new arrivals.</p><form className="newsletter-form"><input type="email" placeholder="Your email" aria-label="Email address" /><button aria-label="Subscribe" type="submit"><ArrowRight size={14} /></button></form></div></div><div className="footer-bottom"><span>© 2026 Visiona. All rights reserved.</span><span className="footer-motto">Style&nbsp;&nbsp; Clarity&nbsp;&nbsp; Confidence</span></div></footer>;
+}

@@ -1,0 +1,68 @@
+VISIONA EYEWEAR SHOWCASE
+========================
+
+INSTALLATION
+------------
+1. Install Node.js 20 or newer.
+2. From the project folder run:
+
+   npm install
+
+3. Create a .env.local file in the project root and add:
+
+   GOOGLE_SHEET_ID=your_google_sheet_id
+   GOOGLE_API_KEY=your_google_api_key
+   SHEET_NAME=Products
+   ADMIN_USERNAME=admin
+   ADMIN_PASSWORD=change_this_password
+
+4. Start the development server:
+
+   npm run dev
+
+Open http://localhost:3000.
+
+GOOGLE SHEET SETUP
+------------------
+Create a Google Sheet with a first row containing these exact columns:
+
+id | name | slug | category | description | price | image | gallery | colors | sizes | featured | createdAt
+
+The Google Sheet must be publicly readable by the API key. The app reads the
+sheet through the Google Sheets v4 Values API and refreshes the read response
+every 60 seconds.
+
+Images are stored locally in public/images/products. In the image and gallery
+columns, enter filenames only. For example:
+
+rayban-black.webp
+rayban-side.webp,rayban-front.webp
+
+The browser loads these as /images/products/rayban-black.webp.
+
+ADMIN
+-----
+Open http://localhost:3000/admin.
+
+The default development login is:
+
+username: admin
+password: change_this_password
+
+Set ADMIN_USERNAME and ADMIN_PASSWORD in .env.local before deploying. The
+dashboard supports adding, editing, and deleting products in the current UI
+session. To persist those writes directly to a sheet, set an optional
+GOOGLE_SHEETS_WRITE_URL pointing to a small authenticated Google Apps Script
+or serverless endpoint that accepts { method, product } JSON. Read access is
+handled directly by the Google Sheets API.
+
+ROUTES
+------
+/             Home showcase
+/products     Collection grid with category and sort controls
+/products/[slug]  Product detail page
+/admin        Admin dashboard
+
+The project uses a small local preview catalog until the Google Sheet is
+configured. Replace the preview images in public/images with your own assets
+using the same filenames or update the sheet image columns.

@@ -1,69 +1,120 @@
 import Image from "next/image";
+import { ArrowRight, Diamond, Eye, Globe2, Leaf, Quote, Star } from "lucide-react";
+import Link from "next/link";
+import { CategoryCard } from "@/components/CategoryCard";
+import { Footer } from "@/components/Footer";
+import { Hero } from "@/components/Hero";
+import { Navbar } from "@/components/Navbar";
+import { ProductGrid } from "@/components/ProductGrid";
+import { SectionReveal } from "@/components/SectionReveal";
+import { getProducts } from "@/src/lib/products";
 
-export default function Home() {
+const categories = [
+  { name: "Sunglasses", eyebrow: "For brighter days", image: "/images/products/rayban-classic.jpg" },
+  { name: "Optical", eyebrow: "Everyday clarity", image: "/images/products/oakley-minimal.jpg" },
+  { name: "Women", eyebrow: "Elegant & modern", image: "/images/products/gucci-urban.jpg" },
+  { name: "Men", eyebrow: "Bold & timeless", image: "/images/products/persol-legacy.jpg" },
+];
+
+export default async function Home() {
+  const products = await getProducts();
+  const latest = [...products].sort((a, b) => b.createdAt.localeCompare(a.createdAt)).slice(0, 4);
+  const featured = products.filter((product) => product.featured).slice(0, 4);
+  const bestSellers = featured.length ? featured : products.slice(0, 4);
+  const newArrivals = latest.length ? latest : products.slice(-4);
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+    <div className="site-page">
+      <Navbar overlay />
+      <main>
+        <Hero products={latest} />
+
+        <section className="brand-intro" aria-label="Visiona design philosophy">
+          <p>Independent design</p><span aria-hidden="true" />
+          <h2>Frames that change<br />the way you see yourself.</h2>
+          <p>New York · Since 2018</p>
+        </section>
+
+        <SectionReveal>
+          <section className="section-shell categories-section" id="collection">
+            <div className="section-heading section-heading-inline">
+              <div><p className="eyebrow">Made for every point of view</p><h2>Featured Collections</h2><p className="section-subtitle">Four distinct edits, one unmistakable design language.</p></div>
+              <Link className="text-link" href="/products">Explore all collections <ArrowRight size={16} strokeWidth={1.5} /></Link>
+            </div>
+            <div className="category-grid">{categories.map((category, index) => <CategoryCard key={category.name} {...category} index={index} />)}</div>
+          </section>
+        </SectionReveal>
+
+        <SectionReveal>
+          <section className="best-sellers-section">
+            <div className="section-shell">
+              <div className="section-heading section-heading-inline">
+                <div><p className="eyebrow">The icons</p><h2>Best Sellers</h2><p className="section-subtitle">Signature silhouettes, chosen again and again.</p></div>
+                <Link className="text-link" href="/products">View the edit <ArrowRight size={16} strokeWidth={1.5} /></Link>
+              </div>
+              <ProductGrid products={bestSellers} />
+            </div>
+          </section>
+        </SectionReveal>
+
+        <SectionReveal>
+          <section className="story-editorial" id="story">
+            <div className="story-editorial-image"><Image src="/images/banners/story-eyewear.jpg" alt="Visiona eyewear in a bold editorial setting" fill sizes="(max-width: 760px) 100vw, 52vw" /></div>
+            <div className="story-editorial-copy">
+              <p className="eyebrow eyebrow-light">Our point of view</p>
+              <h2>More than eyewear.<br />A way of seeing.</h2>
+              <p>Visiona began with a simple belief: the right frame does more than sharpen your sight—it changes how you enter a room. We bring architectural lines, expressive materials, and human comfort into perfect balance.</p>
+              <div className="story-signature"><span>VISIONA</span><small>Designed with clarity and character</small></div>
+              <Link className="light-link" href="/products">Discover our frames <ArrowRight size={16} strokeWidth={1.5} /></Link>
+              <div className="story-stat"><strong>08</strong><span>years of independent<br />frame design</span></div>
+            </div>
+          </section>
+        </SectionReveal>
+
+        <SectionReveal>
+          <section className="section-shell why-section" aria-labelledby="why-title">
+            <div className="section-heading why-heading"><p className="eyebrow">Designed around you</p><h2 id="why-title">Why Choose Visiona</h2><p className="section-subtitle">The details you feel long after the first impression.</p></div>
+            <div className="why-grid">
+              <article><span>01</span><Diamond size={30} strokeWidth={1.1} /><h3>Quality materials</h3><p>Considered acetate, precision metals, and components chosen for lasting beauty.</p></article>
+              <article><span>02</span><Eye size={30} strokeWidth={1.1} /><h3>Modern design</h3><p>Clean, expressive silhouettes with just enough character to feel unmistakably yours.</p></article>
+              <article><span>03</span><Leaf size={30} strokeWidth={1.1} /><h3>Comfortable fit</h3><p>Balanced proportions and lightweight construction, refined for all-day wear.</p></article>
+              <article><span>04</span><Globe2 size={30} strokeWidth={1.1} /><h3>Premium experience</h3><p>Thoughtful guidance and considered service, wherever in the world you see us from.</p></article>
+            </div>
+          </section>
+        </SectionReveal>
+
+        <SectionReveal>
+          <section className="new-arrivals-section">
+            <div className="new-arrivals-intro">
+              <p className="eyebrow eyebrow-light">Just landed</p>
+              <h2>New<br />Arrivals</h2>
+              <p>Fresh proportions and refined materials, created for a new season of seeing.</p>
+              <Link className="light-link" href="/products?sort=newest">Shop new arrivals <ArrowRight size={16} strokeWidth={1.5} /></Link>
+              <span className="new-arrivals-index">Edition 04 — 2026</span>
+            </div>
+            <div className="new-arrivals-products"><ProductGrid products={newArrivals} /></div>
+          </section>
+        </SectionReveal>
+
+        <SectionReveal>
+          <section className="section-shell reviews-section">
+            <div className="reviews-heading"><p className="eyebrow">Worn with confidence</p><h2>Seen through<br />their eyes.</h2><div className="review-rating"><span>4.9</span><div>{[0,1,2,3,4].map((star) => <Star key={star} size={13} fill="currentColor" strokeWidth={1} />)}<small>from 240+ reviews</small></div></div></div>
+            <div className="reviews-grid">
+              <article><Quote size={28} strokeWidth={1} /><p>“The proportions feel incredibly considered. They make a statement without trying too hard—and I can wear them all day.”</p><footer><strong>Amelia R.</strong><span>London · Cartier Élite</span></footer></article>
+              <article><Quote size={28} strokeWidth={1} /><p>“Beautiful packaging, a remarkably light frame, and the kind of finish you notice more every time you put them on.”</p><footer><strong>Daniel K.</strong><span>New York · Ray-Ban Classic</span></footer></article>
+              <article><Quote size={28} strokeWidth={1} /><p>“Visiona feels modern and personal. The frame arrived exactly as pictured and the fit was right from the first wear.”</p><footer><strong>Sofia M.</strong><span>Milan · Gucci Urban</span></footer></article>
+            </div>
+          </section>
+        </SectionReveal>
+
+        <SectionReveal>
+          <section className="community-section">
+            <div><p className="eyebrow">The Visiona community</p><h2>A clearer world,<br />delivered quietly.</h2></div>
+            <div className="community-form-wrap"><p>New releases, design stories, and private previews—sent with intention.</p><form className="community-form"><label className="sr-only" htmlFor="community-email">Email address</label><input id="community-email" type="email" placeholder="Your email address" /><button type="submit" aria-label="Join the Visiona community"><ArrowRight size={18} /></button></form><small>By subscribing, you agree to receive Visiona news.</small></div>
+          </section>
+        </SectionReveal>
       </main>
+      <Footer />
     </div>
   );
 }
